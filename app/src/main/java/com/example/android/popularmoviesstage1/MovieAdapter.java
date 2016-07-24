@@ -35,9 +35,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
         Movie currentMovie  = getItem(position);
         ImageView imageView = (ImageView) gridItemView.findViewById(R.id.movie_poster);
-        Picasso.with(getContext()).load("http://goo.gl/gEgYUd").into(imageView);
-
-        //Glide.with(getContext()).load("http://goo.gl/gEgYUd").into(poster);
+        Glide.with(getContext()).load(currentMovie.getMoviePosterUrl()).into(imageView);
         return gridItemView;
     }
 }
