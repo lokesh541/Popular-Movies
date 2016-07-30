@@ -10,32 +10,43 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.Picasso;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lokesh on 22/7/16.
  */
 
-public class MovieAdapter extends ArrayAdapter<Movie> {
+public class MovieAdapter extends ArrayAdapter<Movie.MovieItem> {
+    private List<Movie.MovieItem> items;
 
-    public MovieAdapter(Context context,ArrayList<Movie> movies) {
-        super(context, 0, movies);
+
+    public MovieAdapter(Context context, List<Movie.MovieItem> items) {
+        super(context,0);
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-         View gridItemView = convertView;
-         if (gridItemView == null){
-                gridItemView = LayoutInflater.from(getContext()).inflate(R.layout.grid_item,parent,false);
-         }
 
-        Movie currentMovie  = getItem(position);
+        View gridItemView = convertView;
+        if (gridItemView == null) {
+            gridItemView = LayoutInflater.from(getContext()).inflate(R.layout.grid_item, parent, false);
+        }
+
+        Movie.MovieItem currentMovie = getItem(position);
         ImageView imageView = (ImageView) gridItemView.findViewById(R.id.movie_poster);
-        Glide.with(getContext()).load(currentMovie.getMoviePosterUrl()).into(imageView);
+        String url = "http://image.tmdb.org/t/p/w500" + currentMovie.getPosterPath();
+        Glide.with(getContext()).load(url).into(imageView);
         return gridItemView;
     }
+
+    public void swapList(List<Movie.MovieItem> items) {
+        this.items = items;
+        notifyDataSetChanged();
+    }
 }
+
