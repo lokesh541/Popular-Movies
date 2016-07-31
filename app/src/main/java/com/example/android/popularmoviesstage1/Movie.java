@@ -54,7 +54,7 @@ import static android.os.Build.VERSION_CODES.M;
 public class Movie {
 
     private Integer page;
-    private List<MovieItem> items = new ArrayList<MovieItem>();
+    private List<MovieItem> results = new ArrayList<MovieItem>();
     private Integer totalResults;
     private Integer totalPages;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -82,8 +82,8 @@ public class Movie {
      * @return
      * The results
      */
-    public List<MovieItem> getItems() {
-        return items;
+    public List<MovieItem> getResults() {
+        return results;
     }
 
     /**
@@ -91,8 +91,8 @@ public class Movie {
      * @param items
      * The results
      */
-    public void setItems(List<MovieItem> items) {
-        this.items = items;
+    public void setResults(List<MovieItem> results) {
+        this.results = results;
     }
 
     /**

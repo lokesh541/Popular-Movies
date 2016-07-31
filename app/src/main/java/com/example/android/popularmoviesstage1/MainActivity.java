@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         gridView = (GridView) findViewById(R.id.grid_view_movies);
-        gridView.setAdapter(movieAdapter);
+
 
         MovieApi movieApi = retrofit.create(MovieApi.class);
         call = movieApi.getMovies(version);
@@ -59,21 +59,19 @@ public class MainActivity extends AppCompatActivity {
 
                 try{
                     movie = response.body();
-                    Log.v(TAG,"response v"+response.body());
+                    Log.v(TAG,"response v"+response.errorBody());
 
-                    items = movie.getItems();
-                    Log.w(TAG, "items=" +items);
+                    items = movie.getResults();
 
+                    for (Movie.MovieItem item :items) {
+                        Log.i("item",item.getTitle());
+
+                    }
+                    movieAdapter = new MovieAdapter(MainActivity.this,items);
+                    gridView.setAdapter(movieAdapter);
                     movieAdapter.swapList(items);
                 } catch (NullPointerException e) {
-                    Toast toast = null;
-                    if (response.code() == 401) {
-                        toast = Toast.makeText(MainActivity.this, "Unauthenticated", Toast.LENGTH_SHORT);
-                    } else if (response.code() >= 400) {
-                        toast = Toast.makeText(MainActivity.this, "Client Error " + response.code()
-                                + " " + response.message(), Toast.LENGTH_SHORT);
-                    }
-                    toast.show();
+                    e.printStackTrace();
                 }
             }
 

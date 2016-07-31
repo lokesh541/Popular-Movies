@@ -3,6 +3,7 @@ package com.example.android.popularmoviesstage1;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ public class MovieAdapter extends ArrayAdapter<Movie.MovieItem> {
 
 
     public MovieAdapter(Context context, List<Movie.MovieItem> items) {
-        super(context,0);
+        super(context,0,items);
     }
 
     @NonNull
@@ -40,8 +41,17 @@ public class MovieAdapter extends ArrayAdapter<Movie.MovieItem> {
         Movie.MovieItem currentMovie = getItem(position);
         ImageView imageView = (ImageView) gridItemView.findViewById(R.id.movie_poster);
         String url = "http://image.tmdb.org/t/p/w500" + currentMovie.getPosterPath();
+        Log.i("item url",url);
+
         Glide.with(getContext()).load(url).into(imageView);
         return gridItemView;
+    }
+
+    public int getCount() {
+        if (items == null) {
+            return -1;
+        }
+        return items.size();
     }
 
     public void swapList(List<Movie.MovieItem> items) {
