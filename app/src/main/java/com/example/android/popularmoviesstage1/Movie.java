@@ -12,44 +12,6 @@ import static android.os.Build.VERSION_CODES.M;
  * Created by lokesh on 22/7/16.
  */
 
-/*public class Movie {
-
-
-    public ArrayList<MovieItem> getMovies() {
-        return movies;
-    }
-
-    public void setMovies(ArrayList<MovieItem> movies) {
-        this.movies = movies;
-    }
-
-    private ArrayList<MovieItem> movies;
-
-
-    public static class MovieItem {
-        private String poster_path;
-
-        public MovieItem(String poster_path) {
-            this.poster_path = poster_path;
-        }
-        private  String posterUrl = "http://image.tmdb.org/t/p/w500/";
-//        public Movie(String posterUrl) {
-  //          moviePosterUrl = posterUrl;
-    //    }
-
-
-        public String getMoviePosterUrl() {
-            return posterUrl + poster_path;
-        }
-
-        public void  setMoviePosterUrl(String poster_path) {
-            this.poster_path = poster_path;
-        }
-    }
-}
-
-*/
-
 
 public class Movie {
 
@@ -88,7 +50,7 @@ public class Movie {
 
     /**
      *
-     * @param items
+     * @param results
      * The results
      */
     public void setResults(List<MovieItem> results) {
