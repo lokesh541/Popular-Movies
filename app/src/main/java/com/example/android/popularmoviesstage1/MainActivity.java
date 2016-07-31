@@ -46,32 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private final String API_KEY = "36c9aef2c07c58b2a228ec4be25dadf8";
     private  String sort_by = "popular";
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.sort_menu, menu);
-        return true;
-    }
-
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.popular:
-                sort_by = "popular";
-                updateScreen(sort_by);
-                item.setChecked(true);
-                return true;
-            case R.id.top_rated:
-                sort_by = "top_rated";
-                updateScreen(sort_by);
-                item.setChecked(true);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +97,33 @@ public void updateScreen(String sort_by) {
         }
     });
 }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sort_menu, menu);
+        return true;
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.popular:
+                sort_by = "popular";
+                updateScreen(sort_by);
+                item.setChecked(true);
+                return true;
+            case R.id.top_rated:
+                sort_by = "top_rated";
+                updateScreen(sort_by);
+                item.setChecked(true);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 }
 
 
