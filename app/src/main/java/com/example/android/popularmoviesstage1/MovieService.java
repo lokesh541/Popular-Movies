@@ -11,8 +11,7 @@ import retrofit2.http.Path;
 public final class MovieService {
     public interface MovieApi {
         @GET("{version}/movie/top_rated?sort_by=popularity.desc&&api_key=36c9aef2c07c58b2a228ec4be25dadf8")
-
-        Call <Movie> getMovies(
+        Call<Movie> getMovies(
                 @Path("version") String version
 
         );

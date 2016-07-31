@@ -1,9 +1,12 @@
 package com.example.android.popularmoviesstage1;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -20,6 +23,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.R.attr.duration;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.os.Build.VERSION_CODES.M;
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private Movie movie;
     private List<Movie.MovieItem> items;
     private GridView gridView;
-    private  MovieAdapter movieAdapter;
+    private MovieAdapter movieAdapter;
     private String version = "3";
 
     @Override
@@ -45,29 +49,17 @@ public class MainActivity extends AppCompatActivity {
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-
-
         gridView = (GridView) findViewById(R.id.grid_view_movies);
-
-
         MovieApi movieApi = retrofit.create(MovieApi.class);
         call = movieApi.getMovies(version);
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
 
-                try{
+                try {
                     movie = response.body();
-                    Log.v(TAG,"response v"+response.errorBody());
-
                     items = movie.getResults();
-
-                    for (Movie.MovieItem item :items) {
-                        Log.i("item",item.getTitle());
-
-                    }
-                    movieAdapter = new MovieAdapter(MainActivity.this,items);
+                    movieAdapter = new MovieAdapter(MainActivity.this, items);
                     gridView.setAdapter(movieAdapter);
                     movieAdapter.swapList(items);
                 } catch (NullPointerException e) {
@@ -78,6 +70,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
                 Log.e("getQuestions threw: ", t.getMessage());
+            }
+        });
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Context context = getApplicationContext();
+                String title = movieAdapter.getItem(position).getTitle();
+                String releaseDate = movieAdapter.getItem(position).getReleaseDate();
+                String plotSummary = movieAdapter.getItem(position).getOverview();
+                String message = title + "\n Release date :" + releaseDate + "\n Plot Summary" + plotSummary;
+                Intent intent = new Intent(context, DetailActivity.class).
+                        putExtra(Intent.EXTRA_TEXT, message);
+                startActivity(intent);
             }
         });
     }

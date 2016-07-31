@@ -28,7 +28,7 @@ public class MovieAdapter extends ArrayAdapter<Movie.MovieItem> {
 
 
     public MovieAdapter(Context context, List<Movie.MovieItem> items) {
-        super(context,0,items);
+        super(context, 0, items);
     }
 
     @NonNull
@@ -42,14 +42,9 @@ public class MovieAdapter extends ArrayAdapter<Movie.MovieItem> {
         }
 
         Movie.MovieItem currentMovie = getItem(position);
-        /*ImageView imageView = (ImageView) gridItemView.findViewById(R.id.movie_poster);
+        ImageView imageView = (ImageView) gridItemView.findViewById(R.id.movie_poster);
         String url = "http://image.tmdb.org/t/p/w500" + currentMovie.getPosterPath();
-        Log.i("item url",url);
-
         Glide.with(getContext()).load(url).into(imageView);
-        */
-        TextView textView = (TextView) gridItemView.findViewById(R.id.movie_poster);
-        textView.setText(currentMovie.getPosterPath());
         return gridItemView;
     }
 
