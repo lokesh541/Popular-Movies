@@ -8,11 +8,12 @@ import android.widget.TextView;
 import static android.R.id.message;
 
 public class DetailActivity extends AppCompatActivity {
-
+    private MovieAdapter movieAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
