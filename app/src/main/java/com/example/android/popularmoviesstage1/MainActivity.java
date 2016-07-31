@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private GridView gridView;
     private MovieAdapter movieAdapter;
     private String version = "3";
-    private final String API_KEY = "36c9aef2c07c58b2a228ec4be25dadf8";
+    private final String API_KEY = "YOUR API KEY";
     private  String sort_by = "popular";
 
     @Override
