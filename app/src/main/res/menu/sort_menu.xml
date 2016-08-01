@@ -4,6 +4,7 @@
     <group android:checkableBehavior="single">
     <item android:id="@+id/popular"
         android:title="popular"
+        android:checked="true"
         android:showAsAction="ifRoom"
         tools:ignore="AppCompatResource" />
     <item android:id="@+id/top_rated"

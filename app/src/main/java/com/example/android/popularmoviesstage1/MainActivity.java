@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,63 +42,70 @@ public class MainActivity extends AppCompatActivity {
     private Call<Movie> call;
     private Movie movie;
     private List<Movie.MovieItem> items;
-    private GridView gridView;
     private MovieAdapter movieAdapter;
     private String version = "3";
     private final String API_KEY = "YOUR API KEY";
-    private  String sort_by = "popular";
+    private String sort_by = "popular";
+    private String imageUrl = "http://image.tmdb.org/t/p/w500";
+
+    @BindView(R.id.grid_view_movies)
+    GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         updateScreen(sort_by);
 
     }
 
-public void updateScreen(String sort_by) {
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
-    gridView = (GridView) findViewById(R.id.grid_view_movies);
-    MovieApi movieApi = retrofit.create(MovieApi.class);
-    call = movieApi.getMovies(version,sort_by,API_KEY);
-    call.enqueue(new Callback<Movie>() {
-        @Override
-        public void onResponse(Call<Movie> call, Response<Movie> response) {
+    public void updateScreen(String sort_by) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MovieApi movieApi = retrofit.create(MovieApi.class);
+        call = movieApi.getMovies(version, sort_by, API_KEY);
+        call.enqueue(new Callback<Movie>() {
+            @Override
+            public void onResponse(Call<Movie> call, Response<Movie> response) {
 
-            try {
-                movie = response.body();
-                items = movie.getResults();
-                movieAdapter = new MovieAdapter(MainActivity.this, items);
-                gridView.setAdapter(movieAdapter);
-                movieAdapter.swapList(items);
-            } catch (NullPointerException e) {
-                e.printStackTrace();
+                try {
+                    movie = response.body();
+                    items = movie.getResults();
+                    movieAdapter = new MovieAdapter(MainActivity.this, items);
+                    gridView.setAdapter(movieAdapter);
+                    movieAdapter.swapList(items);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
-        }
 
-        @Override
-        public void onFailure(Call<Movie> call, Throwable t) {
-            Log.e("getQuestions threw: ", t.getMessage());
-        }
-    });
+            @Override
+            public void onFailure(Call<Movie> call, Throwable t) {
+                Log.e("getQuestions threw: ", t.getMessage());
+            }
+        });
 
-    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            Context context = getApplicationContext();
-            String title = movieAdapter.getItem(position).getTitle();
-            String releaseDate = movieAdapter.getItem(position).getReleaseDate();
-            String plotSummary = movieAdapter.getItem(position).getOverview();
-            String message = title + "\n\nRelease date : " + releaseDate + "\n \nPlot Summary:\n" + plotSummary;
-            Intent intent = new Intent(context, DetailActivity.class).
-                    putExtra(Intent.EXTRA_TEXT, message);
-            startActivity(intent);
-        }
-    });
-}
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Context context = getApplicationContext();
+                Movie.MovieItem currentMovie = movieAdapter.getItem(position);
+                String title = currentMovie.getTitle();
+                String avgRating = currentMovie.getVoteAverage().toString();
+                String releaseDate = currentMovie.getReleaseDate();
+                String plotSummary = currentMovie.getOverview();
+                String message = title + "\nAverage Rating :" + avgRating + "\n\nRelease date : " + releaseDate + "\n \nPlot Summary:\n" + plotSummary;
+                String url = imageUrl + currentMovie.getPosterPath();
+                Intent intent = new Intent(context, DetailActivity.class).
+                        putExtra("message", message)
+                        .putExtra("url", url);
+                startActivity(intent);
+            }
+        });
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
