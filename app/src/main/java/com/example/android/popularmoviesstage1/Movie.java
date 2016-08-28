@@ -135,6 +135,7 @@ public class Movie {
         @Expose
         private Double voteAverage;
 
+
         /**
          * @return The posterPath
          */
@@ -333,5 +334,6 @@ public class Movie {
 
 
     }
+
 
 }

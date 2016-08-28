@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -34,26 +33,31 @@ public class MovieAdapter extends ArrayAdapter<Movie.MovieItem> {
     public MovieAdapter(Context context, List<Movie.MovieItem> items) {
         super(context, 0, items);
     }
-    @BindView(R.id.poster) ImageView imageView;
+
+    @BindView(R.id.detail_activity_poster)
+    ImageView imageView;
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-       ViewHolder holder;
+        ViewHolder holder;
         View gridItemView = convertView;
+
         if (gridItemView == null) {
             gridItemView = LayoutInflater.from(getContext()).inflate(R.layout.grid_item, parent, false);
+
             holder = new ViewHolder(gridItemView);
             gridItemView.setTag(holder);
 
-        }else {
+
+        } else {
             holder = (ViewHolder) convertView.getTag();
+
 
         }
 
         Movie.MovieItem currentMovie = getItem(position);
-        //ImageView imageView = (ImageView) gridItemView.findViewById(R.id.movie_poster);
         String url = "http://image.tmdb.org/t/p/w500" + currentMovie.getPosterPath();
         Picasso.with(getContext()).load(url).into(holder.imageView);
         return gridItemView;
@@ -72,7 +76,9 @@ public class MovieAdapter extends ArrayAdapter<Movie.MovieItem> {
     }
 
     static final class ViewHolder {
-        @BindView(R.id.movie_poster) ImageView imageView;
+        @BindView(R.id.movie_poster)
+        ImageView imageView;
+
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }

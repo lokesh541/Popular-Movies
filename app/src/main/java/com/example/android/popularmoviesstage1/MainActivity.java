@@ -10,14 +10,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,25 +22,22 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.R.attr.duration;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
-import static android.os.Build.VERSION_CODES.M;
-import static android.support.v7.appcompat.R.styleable.MenuItem;
 import static com.example.android.popularmoviesstage1.MovieService.*;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MyActivity";
-
     private static final String API_BASE_URL = "http://api.themoviedb.org/";
     private Call<Movie> call;
     private Movie movie;
     private List<Movie.MovieItem> items;
     private MovieAdapter movieAdapter;
     private String version = "3";
-    private final String API_KEY = "YOUR API KEY";
+    private final String API_KEY = "36c9aef2c07c58b2a228ec4be25dadf8";
     private String sort_by = "popular";
     private String imageUrl = "http://image.tmdb.org/t/p/w500";
+    private final static String MENU_SELECTED = "selected";
+    private int selected = -1;
+    private Retrofit retrofit;
 
     @BindView(R.id.grid_view_movies)
     GridView gridView;
@@ -55,13 +46,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState != null) {
+            sort_by = savedInstanceState.getString(MENU_SELECTED);
+        }
         ButterKnife.bind(this);
         updateScreen(sort_by);
 
     }
 
     public void updateScreen(String sort_by) {
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -88,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -97,26 +92,39 @@ public class MainActivity extends AppCompatActivity {
                 String avgRating = currentMovie.getVoteAverage().toString();
                 String releaseDate = currentMovie.getReleaseDate();
                 String plotSummary = currentMovie.getOverview();
-                String message = title + "\nAverage Rating :" + avgRating + "\n\nRelease date : " + releaseDate + "\n \nPlot Summary:\n" + plotSummary;
+                String id = currentMovie.getId().toString();
+                String message = title + "\nAverage Rating :" + avgRating + "\n\nRelease date : " + releaseDate;
                 String url = imageUrl + currentMovie.getPosterPath();
                 Intent intent = new Intent(context, DetailActivity.class).
                         putExtra("message", message)
-                        .putExtra("url", url);
+                        .putExtra("plotsummary",plotSummary)
+                        .putExtra("url", url)
+                        .putExtra("id", id);
                 startActivity(intent);
             }
         });
     }
 
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sort_menu, menu);
+        switch (sort_by) {
+            case "popular":
+                menu.findItem(R.id.popular).setChecked(true);
+                break;
+            case "top_rated":
+                menu.findItem(R.id.top_rated).setChecked(true);
+                break;
+        }
         return true;
     }
 
 
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId()) {
+        int id = item.getItemId();
+        switch (id) {
             case R.id.popular:
                 sort_by = "popular";
                 updateScreen(sort_by);
@@ -132,7 +140,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(MENU_SELECTED, sort_by);
+        super.onSaveInstanceState(savedInstanceState);
+    }
 }
 
 

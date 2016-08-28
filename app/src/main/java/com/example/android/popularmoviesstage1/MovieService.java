@@ -18,5 +18,19 @@ public final class MovieService {
                 @Query("api_key") String API_KEY
 
         );
+        @GET("{version}/movie/{id}/videos")
+        Call<Trailer> getTrailers(
+                @Path("version") String version,
+                @Path("id") String id,
+                @Query("api_key") String API_KEY
+        );
+
+        @GET("{version}/movie/{id}/reviews")
+        Call<Review> getReviews(
+                @Path("version") String version,
+                @Path("id") String id,
+                @Query("api_key") String API_KEY
+        );
+
     }
 }
